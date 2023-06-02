@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form id="addItemForm">
+    <label>Item Name</label>
+    <input type="text" name="itemName" required />
+    <label>Description</label>
+    <input type="text" name="description" required />
+    <label>Price</label>
+    <input type="text" name="price" required />
+    <label>Quantity</label>
+    <input type="text" name="quantity" required />
+    <button type="submit">Add Item</button>
+  </form>
+  <ul id="listOfItems"></ul>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+  <script>
+    const form = document.getElementById('addItemForm');
+    const itemList = document.getElementById('listOfItems');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const item = form.itemName.value;
+      const desc = form.description.value;
+      const price = form.price.value;
+      const qty = form.quantity.value;
+
+      const obj = {
+        itemName: item,
+        description: desc,
+        price,
+        quantity: qty
+      };
+
+      try {
+        const response = await axios.post('/items', obj);
+        console.log(response);
+        showItemOnScreen(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+
+      form.reset();
+    });
+
+    async function loadItems() {
+      try {
+        const response = await axios.get('/items');
+        response.data.forEach((item) => showItemOnScreen(item));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function showItemOnScreen(item) {
+      const listItem = document.createElement('li');
+      const buy1Btn = document.createElement('button');
+      const buy2Btn = document.createElement('button');
+      const buy3Btn = document.createElement('button');
+
+      buy1Btn.innerHTML = 'Buy 1';
+      buy2Btn.innerHTML = 'Buy 2';
+      buy3Btn.innerHTML = 'Buy 3';
+
+      buy1Btn.addEventListener('click', async () => {
+  item.quantity -= 1;
+  try {
+    const response = await axios.put(`/items/${item.id}`, { qty: item.quantity });
+    console.log(response);
+    listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.quantity}`;
+  } catch (error) {
+    console.error(error);
+  }
+
+  // Remove event listener after clicking
+  buy1Btn.removeEventListener('click', buy1BtnHandler);
+});
+
+buy2Btn.addEventListener('click', async () => {
+  item.quantity -= 2;
+  try {
+    const response = await axios.put(`/items/${item.id}`, { qty: item.quantity });
+    console.log(response);
+    listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.quantity}`;
+  } catch (error) {
+    console.error(error);
+  }
+
+  // Remove event listener after clicking
+  buy2Btn.removeEventListener('click', buy2BtnHandler);
+});
+
+buy3Btn.addEventListener('click', async () => {
+  item.quantity -= 3;
+  try {
+    const response = await axios.put(`/items/${item.id}`, { qty: item.quantity });
+    console.log(response);
+    listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.quantity}`;
+  } catch (error) {
+    console.error(error);
+  }
+
+  // Remove event listener after clicking
+  buy3Btn.removeEventListener('click', buy3BtnHandler);
+});
+
+
+      listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.qty}`;
+
+      listItem.appendChild(buy1Btn);
+      listItem.appendChild(buy2Btn);
+      listItem.appendChild(buy3Btn);
+      itemList.appendChild(listItem);
+    }
+
+    // Load items on page load
+    loadItems();
+  </script>
+</body>
+</html>
