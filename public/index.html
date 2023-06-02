@@ -35,13 +35,14 @@
       const obj = {
         itemName: item,
         description: desc,
-        price,
+        price:price,
         quantity: qty
       };
-
+       
       try {
         const response = await axios.post('/items', obj);
-        console.log(response);
+      
+        console.log(response.data , 'hello');
         showItemOnScreen(response.data);
       } catch (error) {
         console.error(error);
@@ -63,7 +64,7 @@
       const listItem = document.createElement('li');
       const buy1Btn = document.createElement('button');
       const buy2Btn = document.createElement('button');
-      const buy3Btn = document.createElement('button');
+      const buy3Btn = document.createElement('button');       
 
       buy1Btn.innerHTML = 'Buy 1';
       buy2Btn.innerHTML = 'Buy 2';
@@ -74,13 +75,15 @@
   try {
     const response = await axios.put(`/items/${item.id}`, { qty: item.quantity });
     console.log(response);
-    listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.quantity}`;
+    listItem.textContent = `${item.item} - ${item.desc} - ${item.price} - ${item.qty}`;
   } catch (error) {
     console.error(error);
   }
+  listItem.appendChild(buy1Btn);
+      listItem.appendChild(buy2Btn);
+      listItem.appendChild(buy3Btn);
 
-  // Remove event listener after clicking
-  buy1Btn.removeEventListener('click', buy1BtnHandler);
+  
 });
 
 buy2Btn.addEventListener('click', async () => {
@@ -92,9 +95,10 @@ buy2Btn.addEventListener('click', async () => {
   } catch (error) {
     console.error(error);
   }
+  listItem.appendChild(buy1Btn);
+      listItem.appendChild(buy2Btn);
+      listItem.appendChild(buy3Btn);
 
-  // Remove event listener after clicking
-  buy2Btn.removeEventListener('click', buy2BtnHandler);
 });
 
 buy3Btn.addEventListener('click', async () => {
@@ -106,18 +110,20 @@ buy3Btn.addEventListener('click', async () => {
   } catch (error) {
     console.error(error);
   }
-
-  // Remove event listener after clicking
-  buy3Btn.removeEventListener('click', buy3BtnHandler);
+  listItem.appendChild(buy1Btn);
+      listItem.appendChild(buy2Btn);
+      listItem.appendChild(buy3Btn);
+  
 });
 
 
-      listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.qty}`;
+      listItem.textContent = `${item.item} - ${item.description} - ${item.price} - ${item.quantity}`;
 
       listItem.appendChild(buy1Btn);
       listItem.appendChild(buy2Btn);
       listItem.appendChild(buy3Btn);
       itemList.appendChild(listItem);
+      
     }
 
     // Load items on page load
